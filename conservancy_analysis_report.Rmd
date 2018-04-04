@@ -1,0 +1,102 @@
+---
+title: "Conservancy Analysis"
+author: "BEACN"
+date: "March 23, 2018"
+output: html_document
+---
+
+## Setup
+
+Downloading the data
+
+```{r}
+
+library(tidyverse)
+library(ggplot2)
+library(stringr)
+
+conservancy_names <- function(name) {
+  return(paste0("conservancy_", name, ".csv")) 
+}
+
+ucnrs_names <- function(name) {
+  return(paste0("ucnrs_", name, ".csv"))
+}
+
+conservancyNames <- c("birds", "herpetofauna", "invertebrates", "mammals", "plants")
+
+ucnrsNames <- c("animal_list", "plant_list")
+
+fullConservancyNames <- conservancy_names(conservancyNames)
+fullUCNRSNames <- ucnrs_names(ucnrsNames)
+
+allFiles <- c(fullConservancyNames, fullUCNRSNames)
+path <- paste0("./ucnrs_data/", allFiles)
+
+data <- lapply(path, read_csv)
+head(data)
+
+```
+
+## Combining UCNRS and Conservancy into four datasets
+
+
+```{r}
+conservancyAnimalData <- bind_rows(data[[1]], data[[2]], data[[3]], data[[4]]) %>% 
+  distinct(species) %>% 
+  separate(species, into = c("genus", "species", "sublabel1", "sublabel2"), sep = " ", extra = "merge") %>% 
+  filter(!(genus %in% c("Tejon", "Undefined")))
+
+conservancyPlantData <- data[[5]] %>% distinct(species) %>% 
+  separate(species, into = c("genus", "species", "separator_label", "sublabel"), sep = " ", extra = "merge") %>% 
+  filter(!(genus %in% c("Tejon", "Undefined")))
+
+View(conservancyAnimalData)
+View(conservancyPlantData)
+
+# unique(conservancyAnimalData$subspecies)
+# unique(conservancyAnimalData$other_information)
+
+ucnrsPlantData <- data[[7]]
+ucnrsAnimalData <- data[[6]]
+
+names(ucnrsPlantData)[7:8] <- c("separator_label", "sublabel")
+names(ucnrsAnimalData)[4] <- "scientific_name"
+
+ucnrsAnimalDataSubset <- ucnrsAnimalData %>% 
+  select(Reserve, scientific_name) %>% 
+  separate(scientific_name, into = c("genus", "species", "sublabel1", "sublabel2"), sep = " ", extra = "merge")
+
+ucnrsPlantDataSubset <- ucnrsPlantData %>% 
+  select(Reserve, Genus, Species, separator_label, sublabel)
+
+names(ucnrsPlantData)[2:3] <- c("genus", "species")
+
+View(ucnrsAnimalDataSubset)
+View(ucnrsPlantDataSubset)
+```
+
+## Determine Whether, Where, and How Often
+
+```{r}
+isMatch <- function(conservancyData, ucnrsData) {
+  logicalVector <- (str_detect(ucnrsData$genus, regex(conservancyData$genus, ignore_case = TRUE)) | 
+                      str_detect(ucnrsData$genus, regex(paste0(".", conservancyData$genus, "."), ignore_case = TRUE))) &
+                      (str_detect(ucnrsData$species,  regex(conservancyData$species, ignore_case = TRUE)))
+  return(logicalVector)
+}
+
+idx <- isMatch(conservancyAnimalData[1, ], ucnrsAnimalDataSubset)
+ucnrsAnimalDataSubset[idx, ]
+sum(idx, na.rm = TRUE)
+
+ucnrsAnimalDataSubset[which(idx), ]
+
+dummies <- c("test", "test?")
+
+str_detect(dummies, regex(paste0("test", "."), ignore_case = TRUE))
+
+filter((grepl("Canada", cod_areas$areaid)))
+?distinct
+?pull
+```
