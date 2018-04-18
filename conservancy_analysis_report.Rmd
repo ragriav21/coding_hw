@@ -284,10 +284,10 @@ rareOrUniquePlantsNum <- uniquePlantsNum + rarePlantsNum
 
 rareAnimals <- matchingAnimalsReservesCombined %>% filter(count < 4)
 rareAnimalsNum <- nrow(rareAnimals)
-rareOrUniquePlantsNum <- uniqueAnimalsNum + rareAnimalsNum
+rareOrUniqueAnimalsNum <- uniqueAnimalsNum + rareAnimalsNum
 
 ratioRareOrUniquePlants <- rareOrUniquePlantsNum / totalPlantsNum
-ratioRareOrUniqueAnimals <- rareOrUniquePlantsNum / totalAnimalsNum
+ratioRareOrUniqueAnimals <- rareOrUniqueAnimalsNum / totalAnimalsNum
 
 
 ratioUniquePlants
