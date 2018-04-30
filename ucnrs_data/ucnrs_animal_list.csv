@@ -14,8 +14,8 @@ Angelo Coast Range Reserve,Amphibian,Ranidae,Rana catesbiana,,"Bullfrog, America
 Angelo Coast Range Reserve,Amphibian,Rhyacotritonidae,Rhyacotriton olympicus,,Olympic salamander
 Angelo Coast Range Reserve,Amphibian,Rhyacotritonidae,Rhyacotriton variegatus,,Southern Torrent Salamander
 Angelo Coast Range Reserve,Amphibian,Salamandridae,Taricha granulose,,Rough skinned newt
-Angelo Coast Range Reserve,Bird,, Sitta pygmaea,,Pygmy nuthatch 
-Angelo Coast Range Reserve,Bird,, Sphyrapicus varius,,Yellow-bellied sapsucker 
+Angelo Coast Range Reserve,Bird,,Sitta pygmaea,,Pygmy nuthatch 
+Angelo Coast Range Reserve,Bird,,Sphyrapicus varius,,Yellow-bellied sapsucker 
 Angelo Coast Range Reserve,Bird,,Accipiter cooperii,,Cooper's hawk
 Angelo Coast Range Reserve,Bird,,Accipiter gentilis ,,Goshawk
 Angelo Coast Range Reserve,Bird,,Accipiter striatus,,Sharp-shinned hawk
@@ -254,7 +254,7 @@ Angelo Coast Range Reserve,Insect,Carabidae,Amara sp. ,,
 Angelo Coast Range Reserve,Insect,Tortricidae,Amorbia cuneana ,,
 Angelo Coast Range Reserve,Insect,Byrrhidae,Amphicyrta dentipes,,Pill Beetle?
 Angelo Coast Range Reserve,Insect,Carabidae,Anchomenus Anchomenus,,
-Angelo Coast Range Reserve,Insect,Cynipidae,Andricus reniformis    ,,Kidney Stem Gall Wasp
+Angelo Coast Range Reserve,Insect,Cynipidae,Andricus reniformis  ,,Kidney Stem Gall Wasp
 Angelo Coast Range Reserve,Insect,Carabidae,Anisodactylus sp. ,,
 Angelo Coast Range Reserve,Insect,Noctuidae,Annaphila miona ,,
 Angelo Coast Range Reserve,Insect,Pterophoridae,Anstenoptilia marmarodactyla ,,
@@ -323,7 +323,7 @@ Angelo Coast Range Reserve,Insect,Saturniidae,Hyalophora euryalus ,,
 Angelo Coast Range Reserve,Insect,Geometridae,Hydriomena glaucata,,
 Angelo Coast Range Reserve,Insect,Geometridae,Hydriomena marinata ,,
 Angelo Coast Range Reserve,Insect, Sphingidae,Hyles lineata,,Whitelined Sphinx Moth
-Angelo Coast Range Reserve,Insect,Nymphalidae,Junonia coenia   ,,Common Buckeye Butterfly 
+Angelo Coast Range Reserve,Insect,Nymphalidae,Junonia coenia ,,Common Buckeye Butterfly 
 Angelo Coast Range Reserve,Insect,Carabidae,Lachnophorus elegantulus,,
 Angelo Coast Range Reserve,Insect,Elmidae,Lara avara ,,North American wood-eating beetle lara avara 
 Angelo Coast Range Reserve,Insect,Formicidae,Lasius pallitarsis,,Ant
@@ -1498,41 +1498,41 @@ Boyd Deep Canyon Desert Research Center,reptile,,Urosaurus graciosus,,Long-taile
 Boyd Deep Canyon Desert Research Center,reptile,,Uta stansvuriana,,Side-blotched lizard
 Boyd Deep Canyon Desert Research Center,reptile,,Xantusia henshawi,,granite night lizard
 Boyd Deep Canyon Desert Research Center,reptile,,Xantusia vigilis,,desert night lizard
-Burns Piñon Ridge Reserve,bird,,Accipiter striatus ,,Sharp-shinned Hawk 
-Burns Piñon Ridge Reserve,bird,,Accipter cooperii ,,Cooper's Hawk 
-Burns Piñon Ridge Reserve,bird,,Aeronautes saxatalis ,,White-throated Swift 
-Burns Piñon Ridge Reserve,bird,,Aimophia   ruficeps ,,Rufous-crowned Sparrow 
-Burns Piñon Ridge Reserve,bird,,Amphispiza   belli ,,Sage Sparrow 
-Burns Piñon Ridge Reserve,bird,,Amphispiza   bilineata ,,Black-throated Sparrow 
-Burns Piñon Ridge Reserve,bird,,Aphelocoma   californica ,,Western Scrub-jay  
-Burns Piñon Ridge Reserve,bird,,Aquila chrysaetos ,,Golden Eagle 
+Burns Piñon Ridge Reserve,bird,,Accipiter striatus,,Sharp-shinned Hawk 
+Burns Piñon Ridge Reserve,bird,,Accipter cooperii,,Cooper's Hawk 
+Burns Piñon Ridge Reserve,bird,,Aeronautes saxatalis,,White-throated Swift 
+Burns Piñon Ridge Reserve,bird,,Aimophia ruficeps,,Rufous-crowned Sparrow 
+Burns Piñon Ridge Reserve,bird,,Amphispiza belli,,Sage Sparrow 
+Burns Piñon Ridge Reserve,bird,,Amphispiza bilineata,,Black-throated Sparrow 
+Burns Piñon Ridge Reserve,bird,,Aphelocoma californica,,Western Scrub-jay  
+Burns Piñon Ridge Reserve,bird,,Aquila chrysaetos,,Golden Eagle 
 Burns Piñon Ridge Reserve,bird,,Archilochus alexandri,,Black-chinned Hummingbird 
-Burns Piñon Ridge Reserve,bird,,Baeolophus   inoratus ,,Oak Titmouse 
+Burns Piñon Ridge Reserve,bird,,Baeolophus inoratus,,Oak Titmouse 
 Burns Piñon Ridge Reserve,bird,,Branta canadensis ,,Canada Goose 
-Burns Piñon Ridge Reserve,bird,,Bubo virginianus ,,Great Horned Owl 
-Burns Piñon Ridge Reserve,bird,,Buteo jamaicensis ,,Red-tailed Hawk 
-Burns Piñon Ridge Reserve,bird,,Callipepla gambelii ,,Gambel's Quail 
-Burns Piñon Ridge Reserve,bird,,Calypte   anna ,,Anna's Hummingbird  
-Burns Piñon Ridge Reserve,bird,,Calypte   costae ,,Costa's Hummingbird 
-Burns Piñon Ridge Reserve,bird,,Campyylorhynchus brunneicapillus ,,Cactus Wren  
-Burns Piñon Ridge Reserve,bird,,Carduelis   lawrencei ,,Lawrence's Goldfinch 
-Burns Piñon Ridge Reserve,bird,,Carduelis   psaltria ,,Lesser Goldfinch 
-Burns Piñon Ridge Reserve,bird,,Carduelis   tristis ,,American Goldfinch 
-Burns Piñon Ridge Reserve,bird,,Carpodacus   mexicanus ,,House Finch 
-Burns Piñon Ridge Reserve,bird,,Cathartes aura ,,Turkey Vulture 
-Burns Piñon Ridge Reserve,bird,,Catharus   guttatus ,,Hermit Thrush 
-Burns Piñon Ridge Reserve,bird,,Catharus   ustulatus ,,Swainson's Thrush 
-Burns Piñon Ridge Reserve,bird,,Chamaea   fasciata ,,Wrentit  
-Burns Piñon Ridge Reserve,bird,,Colaptes   auratus ,,Northern Flicker 
-Burns Piñon Ridge Reserve,bird,,Columbia livia ,,Rock Pigeon 
-Burns Piñon Ridge Reserve,bird,,Contopus   sordidulus ,,Western Wood Peewee 
-Burns Piñon Ridge Reserve,bird,,Corvus   corax ,,Northern Raven 
-Burns Piñon Ridge Reserve,bird,,Dendroica   coronata ,,Yellow-rumped Warbler 
-Burns Piñon Ridge Reserve,bird,,Dendroica   nigrescens ,,Black-throated Gray Warbler 
-Burns Piñon Ridge Reserve,bird,,Dendroica   occidentalis ,,Hermit Warbler 
-Burns Piñon Ridge Reserve,bird,,Dendroica   petechia ,,Yellow Warbler 
-Burns Piñon Ridge Reserve,bird,,Dendroica   townsendi ,,Townsend's Warbler  
-Burns Piñon Ridge Reserve,bird,,Empidonax   difficilis ,,Pacific-slope Flycatcher  
+Burns Piñon Ridge Reserve,bird,,Bubo virginianus,,Great Horned Owl 
+Burns Piñon Ridge Reserve,bird,,Buteo jamaicensis,,Red-tailed Hawk 
+Burns Piñon Ridge Reserve,bird,,Callipepla gambelii,,Gambel's Quail 
+Burns Piñon Ridge Reserve,bird,,Calypte anna,,Anna's Hummingbird  
+Burns Piñon Ridge Reserve,bird,,Calypte costae,,Costa's Hummingbird 
+Burns Piñon Ridge Reserve,bird,,Campyylorhynchus brunneicapillus,,Cactus Wren  
+Burns Piñon Ridge Reserve,bird,,Carduelis lawrencei,,Lawrence's Goldfinch 
+Burns Piñon Ridge Reserve,bird,,Carduelis psaltria,,Lesser Goldfinch 
+Burns Piñon Ridge Reserve,bird,,Carduelis tristis,,American Goldfinch 
+Burns Piñon Ridge Reserve,bird,,Carpodacus mexicanus,,House Finch 
+Burns Piñon Ridge Reserve,bird,,Cathartes aura,,Turkey Vulture 
+Burns Piñon Ridge Reserve,bird,,Catharus guttatus,,Hermit Thrush 
+Burns Piñon Ridge Reserve,bird,,Catharus ustulatus,,Swainson's Thrush 
+Burns Piñon Ridge Reserve,bird,,Chamaea fasciata,,Wrentit  
+Burns Piñon Ridge Reserve,bird,,Colaptes auratus,,Northern Flicker 
+Burns Piñon Ridge Reserve,bird,,Columbia livia,,Rock Pigeon 
+Burns Piñon Ridge Reserve,bird,,Contopus sordidulus,,Western Wood Peewee 
+Burns Piñon Ridge Reserve,bird,,Corvus corax,,Northern Raven 
+Burns Piñon Ridge Reserve,bird,,Dendroica coronata,,Yellow-rumped Warbler 
+Burns Piñon Ridge Reserve,bird,,Dendroica nigrescens,,Black-throated Gray Warbler 
+Burns Piñon Ridge Reserve,bird,,Dendroica occidentalis,,Hermit Warbler 
+Burns Piñon Ridge Reserve,bird,,Dendroica petechia,,Yellow Warbler 
+Burns Piñon Ridge Reserve,bird,,Dendroica townsendi,,Townsend's Warbler  
+Burns Piñon Ridge Reserve,bird,,Empidonax difficilis,,Pacific-slope Flycatcher  
 Burns Piñon Ridge Reserve,bird,,Empidonax   hammondii ,,Hammond's Flycatcher 
 Burns Piñon Ridge Reserve,bird,,Empidonax   oberholseri ,,Dusky Flycatcher 
 Burns Piñon Ridge Reserve,bird,,Empidonax   wrightii ,,Gray Flycatcher 
@@ -7013,16 +7013,16 @@ Sedgwick Reserve ,Bird,,Zonotrichia leucophrys,,White-crowned Sparrow
 Sedgwick Reserve ,Bird ,,Junco hyemalis,,Dark-eyed Junco
 Sedgwick Reserve ,Insect,Noctuidae, Properigea albimacula ,,
 Sedgwick Reserve ,Insect,Noctuidae, Protorthodes hanhami  ,,
-Sedgwick Reserve ,Insect,Noctuidae, Protorthodes perforata   ,,
+Sedgwick Reserve ,Insect,Noctuidae, Protorthodes perforata ,,
 Sedgwick Reserve ,Insect,Noctuidae, Protorthodes rufula  ,,
 Sedgwick Reserve ,Insect,Arctiidae,A. (N.) proxima ,,
 Sedgwick Reserve ,Insect,Noctuidae,A. cinefacta ,,
 Sedgwick Reserve ,Insect,Noctuidae,A. cuculliformis ,,
-Sedgwick Reserve ,Insect,Noctuidae,A. paviae?                                       ,,
+Sedgwick Reserve ,Insect,Noctuidae,A. paviae?             ,,
 Sedgwick Reserve ,Insect,Noctuidae,Abagrotis denticulata ,,
 Sedgwick Reserve ,Insect,Noctuidae,Abagrotis sp.,,
 Sedgwick Reserve ,Insect,Noctuidae,Abagrotis sp.,,
-Sedgwick Reserve ,Insect,Noctuidae,Acerra normalis   ,,
+Sedgwick Reserve ,Insect,Noctuidae,Acerra normalis ,,
 Sedgwick Reserve ,Insect,Crambidae,Achyra occidentalis,,
 Sedgwick Reserve ,Insect,Tortricidae,Acleris maximana,,
 Sedgwick Reserve ,Insect,Acrolophidae,Acrolophus kearfotti,,
@@ -7102,7 +7102,7 @@ Sedgwick Reserve ,Insect,Notodontidae,Clostera apicalis,,
 Sedgwick Reserve ,Insect,Tortricidae,Cnephasia longana,,
 Sedgwick Reserve ,Insect,Tortricidae,Cochylis carmelana ,,
 Sedgwick Reserve ,Insect,Nymphalidae,Coenonympha california,,
-Sedgwick Reserve ,Insect,Coleophoridae,Coleophora     (dark tan),,
+Sedgwick Reserve ,Insect,Coleophoridae,Coleophora   (dark tan),,
 Sedgwick Reserve ,Insect,Coleophoridae,Coleophora  9  (pale gray),,
 Sedgwick Reserve ,Insect,Coleophoridae,"Coleophora 2 (tan, white lines)",,
 Sedgwick Reserve ,Insect,Coleophoridae,"Coleophora 3 (rust, silver lines)",,
@@ -7208,7 +7208,7 @@ Sedgwick Reserve ,Insect,Geometridae,Hesperumia sulphuraria,,
 Sedgwick Reserve ,Insect,Blastobasidae,Holcocera moroccanella? ,,
 Sedgwick Reserve ,Insect,Blastobasidae,Holcocera sp. (tiny) ,,
 Sedgwick Reserve ,Insect,Blastobasidae,Holcocera sp. 2 (iceryaeella ?) ,,
-Sedgwick Reserve ,Insect,Blastobasidae,Holcocera sp. 3   (uniform gray) ,,
+Sedgwick Reserve ,Insect,Blastobasidae,Holcocera sp. 3 (uniform gray) ,,
 Sedgwick Reserve ,Insect,Pyralidae,Honora dotalis,,
 Sedgwick Reserve ,Insect,Saturniidae,Hyalophora euryalus ,,
 Sedgwick Reserve ,Insect,Geometridae,Hydriomena 3rd sp.,,
@@ -7224,9 +7224,9 @@ Sedgwick Reserve ,Insect,Gelechiidae,Isophrictis sp.? (2nd sp.),,
 Sedgwick Reserve ,Insect,Nymphalidae,Junonia coenia,,
 Sedgwick Reserve ,Insect,Noctuidae,Lacinipolia cuneata ,,
 Sedgwick Reserve ,Insect,Noctuidae,Lacinipolia patalis,,
-Sedgwick Reserve ,Insect,Noctuidae,Lacinipolia pensilis?   ,,
+Sedgwick Reserve ,Insect,Noctuidae,Lacinipolia pensilis? ,,
 Sedgwick Reserve ,Insect,Noctuidae,Lacinipolia strigicollis ,,
-Sedgwick Reserve ,Insect,Noctuidae,Leucania   “ (?) ,,
+Sedgwick Reserve ,Insect,Noctuidae,Leucania “ (?) ,,
 Sedgwick Reserve ,Insect,Noctuidae,Leucania oaxacana ,,
 Sedgwick Reserve ,Insect,Gracillariidae,lithocolletine (dark) ,,
 Sedgwick Reserve ,Insect,Gracillariidae,lithocolletine (white),,
@@ -7267,7 +7267,7 @@ Sedgwick Reserve ,Insect,Noctuidae,Noctua pronuba,,
 Sedgwick Reserve ,Insect,Noctuidae,Nola minna ,,
 Sedgwick Reserve ,Insect,Nymphalidae,Nymphalidae,,
 Sedgwick Reserve ,Insect,Noctuidae,O. singularis  ,,
-Sedgwick Reserve ,Insect,Hesperiidae,Ochlodes agricola   ,,
+Sedgwick Reserve ,Insect,Hesperiidae,Ochlodes agricola ,,
 Sedgwick Reserve ,Insect,Pterophoridae,"Oidaematophorus (small, pale) ",,
 Sedgwick Reserve ,Insect,Pterophoridae,Oidaematophorus (white),,
 Sedgwick Reserve ,Insect,Pterophoridae,Oidaematophorus sulphurodactylus,,
@@ -7964,7 +7964,7 @@ Sweeney Granite Mountains Desert Research Center,Bird,Columbidae,Zenaida macrour
 Sweeney Granite Mountains Desert Research Center,Bird,Emberizidae,Zonotrichia albicollis,,White-throated sparrow
 Sweeney Granite Mountains Desert Research Center,Bird,Emberizidae,Zonotrichia atricapilla,,Golden-crowned sparrow
 Sweeney Granite Mountains Desert Research Center,Bird,Emberizidae,Zonotrichia leucophrys,,White-crowned sparrow
-Sweeney Granite Mountains Desert Research Center,Insect,Myrmicinae,      Crematogaster depilis,,
+Sweeney Granite Mountains Desert Research Center,Insect,Myrmicinae,  Crematogaster depilis,,
 Sweeney Granite Mountains Desert Research Center,Insect,Eulophidae,  Cirrospilus coachellae Gates,,
 Sweeney Granite Mountains Desert Research Center,Insect,Asilidae,  Hodophylax basingeri Pritchard,,
 Sweeney Granite Mountains Desert Research Center,Insect,Bembicidae,  Microbembex argyropleura R. Bohart,,
@@ -7995,7 +7995,7 @@ Sweeney Granite Mountains Desert Research Center,Insect,Apidae, Diadasia austral
 Sweeney Granite Mountains Desert Research Center,Insect,Apidae, Diadasia lutzi Cockerell,,
 Sweeney Granite Mountains Desert Research Center,Insect,Megachilidae, Dianthidium p. platyurum Cockerell,,
 Sweeney Granite Mountains Desert Research Center,Insect,Chalcididae, Dirhinus sp.,,
-Sweeney Granite Mountains Desert Research Center,Insect,Issidae, Dyctidea   variegata Van Duzee,,
+Sweeney Granite Mountains Desert Research Center,Insect,Issidae, Dyctidea variegata Van Duzee,,
 Sweeney Granite Mountains Desert Research Center,Insect,Meloidae, Epicauta fortis Werner,,
 Sweeney Granite Mountains Desert Research Center,Insect,Vespidae, Euparagia sp.,,
 Sweeney Granite Mountains Desert Research Center,Insect,Eulophidae, Euplectrus sp.,,
@@ -8386,9 +8386,9 @@ Sierra Nevada Aquatic Research Laboratory",Amphibian,Phrynosomatidae,Sceloporus 
 "Valentine Eastern Sierra Reserve /
 Sierra Nevada Aquatic Research Laboratory",Amphibian,Pelobatidae,Spea intermontana,,Great Basin Spadefoot Toad
 "Valentine Eastern Sierra Reserve /
-Sierra Nevada Aquatic Research Laboratory",Bird,Picidae,        Picoides albolarvatus,,White-headed Woodpecker
+Sierra Nevada Aquatic Research Laboratory",Bird,Picidae,    Picoides albolarvatus,,White-headed Woodpecker
 "Valentine Eastern Sierra Reserve /
-Sierra Nevada Aquatic Research Laboratory",Bird,Picidae,        Sphyrapicus ruber,,Red-breasted Sapsucker
+Sierra Nevada Aquatic Research Laboratory",Bird,Picidae,    Sphyrapicus ruber,,Red-breasted Sapsucker
 "Valentine Eastern Sierra Reserve /
 Sierra Nevada Aquatic Research Laboratory",Bird,Accipitridae,Accipiter cooperii,,Cooper's Hawk
 "Valentine Eastern Sierra Reserve /

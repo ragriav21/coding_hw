@@ -11,13 +11,15 @@ output:
 
 Downloading the data
 
-```{r results = 'hide'}
-
-library(tidyverse)
+```{r Downloading Necessary Data}
+library(Hmisc)
 library(ggplot2)
 library(stringr)
 library(gridExtra)
-library(grid)
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(plotly)
 
 conservancy_names <- function(name) {
   return(paste0("conservancy_", name, ".csv")) 
@@ -45,7 +47,7 @@ head(data)
 ## Combining UCNRS and Conservancy into four datasets
 
 
-```{r}
+```{r Combining Datasets}
 
 # Separating out columns of data for conservancy data and removing irrelevant values
 
@@ -70,17 +72,16 @@ names(ucnrsAnimalData)[4] <- "scientific_name"
 
 # Cleaning UCNRS Animal data
 
-ucnrsAnimalDataSubsetTemp <- ucnrsAnimalData %>% 
+ucnrsAnimalDataSubset <- ucnrsAnimalData %>% 
+  mutate(scientific_name = gsub("\\(", "", scientific_name), 
+         scientific_name = gsub("\\)", "", scientific_name),
+         scientific_name = gsub("\\.", "", scientific_name), 
+         scientific_name = iconv(scientific_name, "utf-8", "ascii", sub=" "),
+         Reserve = iconv(Reserve, "utf-8", "ascii", sub="n")) %>% 
   select(Reserve, scientific_name) %>% 
   separate(scientific_name, into = c("genus", "species", "sublabel1", "sublabel2"), sep = " ", extra = "merge") %>%
+  mutate(species = tolower(species)) %>% 
   distinct()
-
-
-ucnrsAnimalDataSubset <-  mutate(ucnrsAnimalDataSubsetTemp, 
-                                 sublabel1 = gsub("\\(", "", sublabel1), sublabel2 = gsub("\\(", "", sublabel2), 
-         sublabel1 = gsub("\\)", "", sublabel1), sublabel2 = gsub("\\)", "", sublabel2),
-         sublabel1 = gsub("\\.", "", sublabel1), sublabel2 = gsub("\\.", "", sublabel2), 
-         species = tolower(species))
 
 # Cleaning UCNRS Plant Data
 
@@ -102,9 +103,10 @@ head(conservancyPlantData)
 
 ```
 
-## Match Ratio of Plants per Reserve
+## Match Ratio of Species per Reserve
 
-```{r}
+```{r Create Plant Table}
+
 # Find shared genies and species of plants
 matchingPlants <- semi_join(ucnrsPlantDataSubset, conservancyPlantData, by = c("genus", "species", "sublabel")) %>%
   select(reserve, genus, species, sublabel)
@@ -112,25 +114,179 @@ matchingPlants <- semi_join(ucnrsPlantDataSubset, conservancyPlantData, by = c("
 # Calculate how similar plant species composition is by reserve
 matchingPlantsCount <- matchingPlants %>% 
   group_by(reserve) %>% 
-  summarize(count = n())
+  filter(!is.na(reserve)) %>% 
+  summarize(plant_species_in_reserve_also_in_conservancy = n())
 
+# Find total plant species per reserve
 totalPlantsCount <- ucnrsPlantDataSubset %>% 
   group_by(reserve) %>% 
-  summarize(count = n())
+  filter(!is.na(reserve)) %>% 
+  summarize(total_plant_species_in_reserve = n())
 
+# Total plant count for conservancy
+total_plant_species_in_conservancy <- nrow(conservancyPlantData)
+
+# Create tables comparing proportion of plants in conservancy also in reserve and vice versa 
 plantsComparisonTable <- left_join(matchingPlantsCount, totalPlantsCount, 
-                                   by = "reserve", suffix = c("_matching", "_total")) %>% 
-  mutate(match_ratio = count_matching / count_total) %>% 
-  arrange(desc(match_ratio))
+                                   by = "reserve") %>% 
+  mutate(proportion_plant_species_in_reserve_also_in_conservancy = 
+           plant_species_in_reserve_also_in_conservancy / total_plant_species_in_reserve) %>% 
+  mutate(percent_plant_species_in_reserve_also_in_conservancy = 
+           paste0(format(100 * proportion_plant_species_in_reserve_also_in_conservancy, 
+         digits = 2), "%")) %>% 
+  mutate(proportion_plant_species_in_conservancy_also_in_reserve = 
+           plant_species_in_reserve_also_in_conservancy / total_plant_species_in_conservancy) %>% 
+  mutate(percent_plant_species_in_conservancy_also_in_reserve = 
+           paste0(format(100 * proportion_plant_species_in_conservancy_also_in_reserve, 
+         digits = 2), "%")) %>% 
+  arrange(desc(proportion_plant_species_in_reserve_also_in_conservancy))
 
-plantsComparisonTable
+plantsComparisonTableConservancyEmphasis <- plantsComparisonTable %>% 
+  arrange(desc(proportion_plant_species_in_conservancy_also_in_reserve))
+
+# Visualize results
+plantsComparisonTableViz <- kable(plantsComparisonTable, 
+                                  format = "html", align = "lcccc", 
+                                  col.names = gsub("_", " ", capitalize(colnames(plantsComparisonTable)))) %>% 
+  kable_styling
+
+plantsComparisonTableConservancyEmphasisViz <- kable(plantsComparisonTableConservancyEmphasis, 
+                                  format = "html", align = "lcccc", 
+                                  col.names = gsub("_", " ", capitalize(colnames(plantsComparisonTable)))) %>% 
+  kable_styling
+
+plantsComparisonTableViz
+plantsComparisonTableConservancyEmphasisViz
+
+```
+
+```{r Create Animal Table}
+# Find shared genies and species of animals
+matchingAnimals <- semi_join(ucnrsAnimalDataSubset, conservancyAnimalData, by = c("genus", "species", "sublabel1")) %>%
+  select(reserve, genus, species, sublabel = sublabel1)
+
+# Calculate how similar animal species composition is by reserve
+matchingAnimalsCount <- matchingAnimals %>% 
+  group_by(reserve) %>% 
+  filter(!is.na(reserve)) %>% 
+  summarize(animal_species_in_reserve_also_in_conservancy = n()) 
+
+totalAnimalsCount <- ucnrsAnimalDataSubset %>% 
+  group_by(reserve) %>% 
+  filter(!is.na(reserve)) %>% 
+  summarize(total_animal_species_in_reserve = n())
+
+# Total animal count for conservancy
+total_animal_species_in_conservancy <- nrow(conservancyAnimalData)
+
+# Create tables comparing proportion of plants in conservancy also in reserve and vice versa 
+
+animalsComparisonTable <- left_join(matchingAnimalsCount, totalAnimalsCount, 
+                                   by = "reserve") %>% 
+  mutate(proportion_animal_species_in_reserve_also_in_conservancy = 
+           animal_species_in_reserve_also_in_conservancy / total_animal_species_in_reserve) %>% 
+  mutate(percent_animal_species_in_reserve_also_in_conservancy = 
+           paste0(format(100 * proportion_animal_species_in_reserve_also_in_conservancy, 
+         digits = 2), "%")) %>% 
+  mutate(proportion_animal_species_in_conservancy_also_in_reserve = 
+           animal_species_in_reserve_also_in_conservancy / total_animal_species_in_conservancy) %>% 
+  mutate(percent_animal_species_in_conservancy_also_in_reserve = 
+           paste0(format(100 * proportion_animal_species_in_conservancy_also_in_reserve, 
+         digits = 2), "%")) %>% 
+  arrange(desc(proportion_animal_species_in_reserve_also_in_conservancy))
+
+animalsComparisonTableConservancyEmphasis <- animalsComparisonTable %>% 
+  arrange(desc(percent_animal_species_in_conservancy_also_in_reserve))
+
+# Visualize results
+animalsComparisonTableViz <- kable(animalsComparisonTable, 
+                                  format = "html", align = "lcccc", 
+                                  col.names = gsub("_", " ", capitalize(colnames(animalsComparisonTable)))) %>% 
+  kable_styling
+
+animalsComparisonTableConservancyEmphasisViz <- kable(animalsComparisonTableConservancyEmphasis, 
+                                  format = "html", align = "lcccc", 
+                                  col.names = gsub("_", " ", capitalize(colnames(animalsComparisonTableConservancyEmphasis)))) %>% 
+  kable_styling
+
+animalsComparisonTableViz
+animalsComparisonTableConservancyEmphasisViz
+
+```
+
+```{r Create Total Species Count}
+
+# Combine species data
+matchingSpecies <- bind_rows(matchingAnimals, matchingPlants) 
+
+animalSpeciesDataStandardized <- ucnrsAnimalDataSubset %>% 
+  select(reserve, genus, species, sublabel = sublabel1)
+plantSpeciesDataStandardized <- ucnrsPlantDataSubset %>% 
+  select(reserve, genus, species, sublabel)
+
+combinedSpeciesData <- bind_rows(animalSpeciesDataStandardized, plantSpeciesDataStandardized)
+
+conservancyAnimalSpeciesDataStandardized <- conservancyAnimalData %>% 
+  select(genus, species, sublabel = sublabel1)
+conservancyPlantSpeciesDataStandardized <- conservancyPlantData %>% 
+  select(genus, species, sublabel)
+
+conservancyCombinedSpeciesData <- bind_rows(conservancyAnimalSpeciesDataStandardized, 
+                                            conservancyPlantSpeciesDataStandardized)
+
+# Calculate matching species count
+matchingSpeciesCount <- matchingSpecies %>% 
+  group_by(reserve) %>% 
+  filter(!is.na(reserve)) %>% 
+  summarize(species_in_reserve_also_in_conservancy = n()) 
+
+totalSpeciesCount <- combinedSpeciesData %>% 
+  group_by(reserve) %>% 
+  filter(!is.na(reserve)) %>% 
+  summarize(total_species_in_reserve = n())
+
+total_species_in_conservancy <- nrow(conservancyCombinedSpeciesData)
+
+# Create tables comparing proportion of plants in conservancy also in reserve and vice versa 
+
+speciesComparisonTable <- left_join(matchingSpeciesCount, totalSpeciesCount, 
+                                   by = "reserve") %>% 
+  mutate(proportion_species_in_reserve_also_in_conservancy = 
+           species_in_reserve_also_in_conservancy / total_species_in_reserve) %>% 
+  mutate(percent_species_in_reserve_also_in_conservancy = 
+           paste0(format(100 * proportion_species_in_reserve_also_in_conservancy, 
+         digits = 2), "%")) %>% 
+  mutate(proportion_species_in_conservancy_also_in_reserve = 
+           species_in_reserve_also_in_conservancy / total_species_in_conservancy) %>% 
+  mutate(percent_species_in_conservancy_also_in_reserve = 
+           paste0(format(100 * proportion_species_in_conservancy_also_in_reserve, 
+         digits = 2), "%")) %>% 
+  arrange(desc(proportion_species_in_reserve_also_in_conservancy))
+
+speciesComparisonTableConservancyEmphasis <- speciesComparisonTable %>% 
+  arrange(desc(proportion_species_in_conservancy_also_in_reserve))
+
+# Visualize results
+speciesComparisonTableViz <- kable(speciesComparisonTable, 
+                                  format = "html", align = "lcccc", 
+                                  col.names = gsub("_", " ", capitalize(colnames(speciesComparisonTable)))) %>% 
+  kable_styling
+
+speciesComparisonTableConservancyEmphasisViz <- 
+  kable(speciesComparisonTableConservancyEmphasis, 
+        format = "html", align = "lcccc", 
+        col.names = gsub("_", " ", capitalize(colnames(speciesComparisonTableConservancyEmphasis)))) %>% 
+  kable_styling
+
+speciesComparisonTableViz
+speciesComparisonTableConservancyEmphasisViz
 
 ```
 
 
-## Where each plant is found
+## Species Uniqueness Count
 
-```{r}
+```{r Conservancy Plant Species with List of Reserves where Found}
 # Find places where each matched species shows up in other reserves
 
 matchingPlantsArranged <- matchingPlants %>% 
@@ -171,44 +327,15 @@ matchingPlantsReservesCombined <- matchingPlantsArranged %>%
 matchingPlantsReservesCombined
 ```
 
-## Match Ratio of Animals
-per Reserve
-
-```{r}
-# Find shared genies and species of plants
-matchingAnimals <- semi_join(ucnrsAnimalDataSubset, conservancyAnimalData, by = c("genus", "species", "sublabel1")) %>%
-  select(reserve, genus, species, sublabel1, sublabel2)
-
-# Calculate how similar plant species composition is by reserve
-matchingAnimalsCount <- matchingAnimals %>% 
-  group_by(reserve) %>% 
-  summarize(count = n())
-
-totalAnimalsCount <- ucnrsAnimalDataSubset %>% 
-  group_by(reserve) %>% 
-  summarize(count = n())
-
-animalsComparisonTable <- left_join(matchingAnimalsCount, totalAnimalsCount, 
-                                   by = "reserve", suffix = c("_matching", "_total")) %>% 
-  mutate(match_ratio = count_matching / count_total) %>% 
-  arrange(desc(match_ratio))
-
-animalsComparisonTable
-
-```
-
-
-## Where each plant is found
-
-```{r}
+```{r Conservancy Animal Species with List of Reserves where Found}
 
 # Find places where each matched species shows up in other reserves
 
 matchingAnimalsArranged <- matchingAnimals %>% 
-  arrange(genus, species, sublabel1, reserve) 
+  arrange(genus, species, sublabel, reserve) 
 
 matchingAnimalsReserves <- matchingAnimalsArranged  %>% 
-  group_by(genus, species, sublabel1) %>% 
+  group_by(genus, species, sublabel) %>% 
   summarize(count = n()) 
 
 # Add names of reserves each species is represented in at end:
@@ -236,23 +363,75 @@ matchingAnimalsArranged$reserve_list[idx_max] <-
 # Combine the data
 
 matchingAnimalsReservesCombined <- matchingAnimalsArranged %>% 
-  distinct(genus, species, sublabel1, reserve_list) %>% 
-  right_join(matchingAnimalsReserves, by = c("genus", "species", "sublabel1"))
+  distinct(genus, species, sublabel, reserve_list) %>% 
+  right_join(matchingAnimalsReserves, by = c("genus", "species", "sublabel"))
 
 matchingAnimalsReservesCombined
 ```
 
-## Visuals & Summary Statistics
+```{r Conservancy Species with List of Reserves where Found}
 
-```{r}
+# Find places where each matched species shows up in other reserves
 
-plantsComparisonTable %>% 
-  filter(match_ratio > 0.25) %>% 
-  ggplot(aes(x = reorder(reserve, match_ratio), y = match_ratio)) + 
-  geom_bar(stat = "identity") +
-  coord_flip()
+matchingSpeciesCountByReserve <- bind_rows("animal" = matchingAnimalsReservesCombined, 
+                                           "plant" = matchingPlantsReservesCombined,
+                                           .id = "kingdom")
 
-animalsComparisonTable %>% 
+uniquePlants <- conservancyPlantData %>% 
+  anti_join(ucnrsPlantDataSubset, by = c("genus", "species", "sublabel")) %>% 
+  select(genus, species, sublabel) %>% 
+  mutate(count = 0)
+
+uniqueAnimals <- conservancyAnimalData %>% 
+  anti_join(ucnrsAnimalDataSubset, by = c("genus", "species", "sublabel1")) %>% 
+  select(genus, species, sublabel = sublabel1) %>% 
+  mutate(count = 0)
+
+uniqueSpecies <- bind_rows("animal" = uniqueAnimals, "plant" = uniquePlants, .id = "kingdom") 
+
+matchingSpeciesWithUnique <- bind_rows(matchingSpeciesCountByReserve, uniqueSpecies) %>% 
+  filter(!is.na(species))
+
+matchingSpeciesWithUnique
+
+#Compute Number and Ratio of Rare and Unique Species
+
+totalSpecies <- nrow(matchingSpeciesWithUnique)
+
+rareOrUniqueSpecies <- matchingSpeciesWithUnique %>% filter(count < 4)
+
+totalRareOrUniqueSpecies <- nrow(rareOrUniqueSpecies)
+totalUniqueSpecies <- nrow(uniqueSpecies)
+
+ratioRareOrUniqueSpecies <- totalRareOrUniqueSpecies / totalSpecies
+ratioUniqueSpecies <- totalUniqueSpecies / totalSpecies
+
+# Make a table for presentation
+
+rareOrUniqueComparisonTable <- tibble("variable" = c("Unique Species (in no other reserve)", 
+                                                     "Rare or Unique Species (in < 4 reserves)", 
+                                                     "Total Species in Conservancy"), 
+                                      "number" = c(totalUniqueSpecies, 
+                                                   totalRareOrUniqueSpecies, 
+                                                   totalSpecies), 
+                                      "ratio" = c(ratioUniqueSpecies,
+                                                  ratioRareOrUniqueSpecies,
+                                                  1))
+
+speciesComparisonTableViz <- kable(rareOrUniqueComparisonTable, 
+                                  format = "html", align = "lcc", 
+                                  col.names = capitalize(colnames(rareOrUniqueComparisonTable))) %>% 
+  kable_styling
+
+speciesComparisonTableViz
+
+```
+
+## Summary Statistics
+
+```{r Plots of Conservancies with Closest Matches}
+
+speciesComparisonTable %>% 
   filter(match_ratio > 0.25) %>% 
   ggplot(aes(x = reorder(reserve, match_ratio), y = match_ratio)) + 
   geom_bar(stat = "identity") +
