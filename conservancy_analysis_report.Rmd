@@ -20,6 +20,7 @@ library(tidyverse)
 library(knitr)
 library(kableExtra)
 library(plotly)
+library(RcppRoll)
 
 conservancy_names <- function(name) {
   return(paste0("conservancy_", name, ".csv")) 
@@ -364,7 +365,8 @@ matchingAnimalsArranged$reserve_list[idx_max] <-
 
 matchingAnimalsReservesCombined <- matchingAnimalsArranged %>% 
   distinct(genus, species, sublabel, reserve_list) %>% 
-  right_join(matchingAnimalsReserves, by = c("genus", "species", "sublabel"))
+  right_join(matchingAnimalsReserves, by = c("genus", "species", "sublabel")) %>% 
+  filter(!is.na(species))
 
 matchingAnimalsReservesCombined
 ```
@@ -397,6 +399,9 @@ matchingSpeciesWithUnique
 #Compute Number and Ratio of Rare and Unique Species
 
 totalSpecies <- nrow(matchingSpeciesWithUnique)
+totalAnimalSpecies <- nrow(matchingAnimalsReservesCombined)
+totalPlantSpecies <- nrow(matchingPlantsReservesCombined)
+
 
 rareOrUniqueSpecies <- matchingSpeciesWithUnique %>% filter(count < 4)
 
@@ -427,6 +432,82 @@ speciesComparisonTableViz
 
 ```
 
+```{r Conservancy Species with List of Reserves where Found, disaggregated by rarity}
+
+# Calculate Chart of Threshold for Species
+
+speciesBelowReserveThreshold <- matchingSpeciesWithUnique %>% 
+  group_by(count) %>% 
+  rename(number_of_reserves_x = count) %>% 
+  summarize(number_of_species_found_in_x_reserves = n()) %>% 
+  mutate(number_of_species_found_in_x_or_fewer_reserves = 
+           cumsum(number_of_species_found_in_x_reserves)) %>% 
+  mutate(ratio_of_species_found_in_x_or_fewer_reserves = 
+           number_of_species_found_in_x_or_fewer_reserves / 
+           totalSpecies) %>%
+  mutate(percent_of_species_found_in_x_or_fewer_reserves = 
+           paste0(format(100 * ratio_of_species_found_in_x_or_fewer_reserves, 
+         digits = 3), "%"))
+  
+speciesBelowReserveThreshold
+  
+
+# Calculate Chart of Threshold for Animals
+
+animalsBelowReserveThreshold <- matchingSpeciesWithUnique %>% 
+  group_by(count, kingdom) %>% 
+  summarize(number_of_species_found_in_x_reserves = n()) %>% 
+  filter(kingdom == "animal") %>% 
+  select(number_of_reserves_x = count, 
+         number_of_species_found_in_x_reserves) %>% 
+  ungroup() %>% 
+  mutate(number_of_species_found_in_x_or_fewer_reserves = 
+           cumsum(number_of_species_found_in_x_reserves)) %>% 
+  mutate(ratio_of_species_found_in_x_or_fewer_reserves = 
+           number_of_species_found_in_x_or_fewer_reserves / 
+           totalSpecies) %>%
+  mutate(percent_of_species_found_in_x_or_fewer_reserves = 
+           paste0(format(100 * ratio_of_species_found_in_x_or_fewer_reserves, 
+         digits = 3), "%"))
+
+animalsBelowReserveThreshold
+
+
+# Calculate Chart of Threshold for Plants
+
+plantsBelowReserveThreshold <- matchingSpeciesWithUnique %>% 
+  group_by(count, kingdom) %>% 
+  summarize(number_of_species_found_in_x_reserves = n()) %>% 
+  filter(kingdom == "plant") %>% 
+  select(number_of_reserves_x = count, 
+         number_of_species_found_in_x_reserves) %>% 
+  ungroup() %>% 
+  mutate(number_of_species_found_in_x_or_fewer_reserves = 
+           cumsum(number_of_species_found_in_x_reserves)) %>% 
+  mutate(ratio_of_species_found_in_x_or_fewer_reserves = 
+           number_of_species_found_in_x_or_fewer_reserves / 
+           totalSpecies) %>%
+  mutate(percent_of_species_found_in_x_or_fewer_reserves = 
+           paste0(format(100 * ratio_of_species_found_in_x_or_fewer_reserves, 
+         digits = 3), "%"))
+
+plantsBelowReserveThreshold
+
+# Bind tables, combining by level
+
+
+
+# Make a table for presentation
+
+speciesComparisonTableViz <- kable(rareOrUniqueComparisonTable, 
+                                  format = "html", align = "lcc", 
+                                  col.names = capitalize(colnames(rareOrUniqueComparisonTable))) %>% 
+  kable_styling
+
+speciesComparisonTableViz
+
+```
+
 ## Summary Statistics
 
 ```{r Plots of Conservancies with Closest Matches}
@@ -439,46 +520,5 @@ speciesComparisonTable %>%
 
 ```
 
-## Unique Plants and Animals
 
-
-```{r}
-
-uniquePlants <- conservancyPlantData %>% anti_join(ucnrsPlantDataSubset, by = c("genus", "species", "sublabel"))
-uniqueAnimals <- conservancyAnimalData %>% anti_join(ucnrsAnimalDataSubset, by = c("genus", "species", "sublabel1"))
-
-
-totalPlantsNum <- nrow(conservancyPlantData)
-uniquePlantsNum <- nrow(uniquePlants)
-
-totalAnimalsNum <- nrow(conservancyAnimalData)
-uniqueAnimalsNum <- nrow(uniqueAnimals)
-
-ratioUniquePlants <- uniquePlantsNum / totalPlantsNum
-ratioUniqueAnimals <- uniqueAnimalsNum / totalAnimalsNum
-
-rarePlants <- matchingPlantsReservesCombined %>% filter(count < 4)
-rarePlantsNum <- nrow(rarePlants)
-rareOrUniquePlantsNum <- uniquePlantsNum + rarePlantsNum
-
-rareAnimals <- matchingAnimalsReservesCombined %>% filter(count < 4)
-rareAnimalsNum <- nrow(rareAnimals)
-rareOrUniqueAnimalsNum <- uniqueAnimalsNum + rareAnimalsNum
-
-ratioRareOrUniquePlants <- rareOrUniquePlantsNum / totalPlantsNum
-ratioRareOrUniqueAnimals <- rareOrUniqueAnimalsNum / totalAnimalsNum
-
-
-ratioUniquePlants
-ratioRareOrUniquePlants
-
-ratioUniqueAnimals
-ratioRareOrUniqueAnimals
-
-uniquePlants
-uniqueAnimals
-
-rarePlants
-rareAnimals
-```
 
