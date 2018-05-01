@@ -172,7 +172,7 @@ plantsComparisonTable <- left_join(matchingPlantsCount, totalPlantsCount,
            matching_plant_species / total_plant_species_in_conservancy) %>% 
   mutate(percent_matching_plant_species_in_conservancy = 
            paste0(format(100 * proportion_matching_plant_species_in_conservancy, 
-         digits = 2), "%")) %>% 
+         digits = 1), "%")) %>% 
   arrange(desc(proportion_matching_plant_species_in_reserve)) 
 
 plantsComparisonTableConservancyEmphasis <- plantsComparisonTable %>% 
@@ -227,7 +227,7 @@ animalsComparisonTable <- left_join(matchingAnimalsCount, totalAnimalsCount,
            matching_animal_species / total_animal_species_in_reserve) %>% 
   mutate(percent_matching_animal_species_in_reserve = 
            paste0(format(100 * proportion_matching_animal_species_in_reserve, 
-         digits = 2), "%")) %>% 
+         digits = 3), "%")) %>% 
   mutate(proportion_matching_animal_species_in_conservancy = 
            matching_animal_species / total_animal_species_in_conservancy) %>% 
   mutate(percent_matching_animal_species_in_conservancy = 
@@ -309,7 +309,7 @@ speciesComparisonTable <- left_join(matchingSpeciesCount, totalSpeciesCount,
            matching_species / total_species_in_conservancy) %>% 
   mutate(percent_matching_species_in_conservancy = 
            paste0(format(100 * proportion_matching_species_in_conservancy, 
-         digits = 2), "%")) %>% 
+         digits = 1), "%")) %>% 
   arrange(desc(proportion_matching_species_in_reserve))
 
 speciesComparisonTableConservancyEmphasis <- speciesComparisonTable %>% 
@@ -623,38 +623,115 @@ plantsComparisonAllReserveNumbersViz
 
 ## Summary Statistics
 
-```{r Plots of Conservancies with Closest Matches}
+```{r Plots of Conservancies with Closest Matches of Species}
 
-# Plot all species
+# Create a long-format comparison table should we need it
 
 allComparisonTableLong <- allComparisonTable %>% 
   gather(proportion_matching_species_in_reserve,
          proportion_matching_species_in_conservancy,
          key = "proportion_type", value = "proportion")
-  
-allComparisonTable %>% 
-  filter(kingdom == "species") %>% 
+
+# Order reserve by factors so as to use in plots
+
+speciesComparison <- allComparisonTable %>% 
+  filter(kingdom == "species")
+
+speciesComparison$reserve <- 
+  factor(speciesComparison$reserve,
+         levels = unique(speciesComparison$reserve)[order(speciesComparison$proportion_matching_species_in_reserve,
+                                                          decreasing = TRUE)])
+
+# Set margins
+
+margins <- list(l = 250, r = 0, b = 0, t = 50, pad = 0.5)
+
+# Plot % species present in each reserve that are also in the conservancy
+
+speciesComparison %>% 
   plot_ly(y = ~reserve, 
           x = ~proportion_matching_species_in_reserve,
           type = "bar", 
-          name = "Proportion of Matching Species in Reserves",
-          orientation = "h") %>% 
+          name = "Proportion of Matching Species in Reserves (out of 1)",
+          orientation = "h",
+          width = 1000,
+          height = 800) %>% 
   add_trace(x = ~proportion_matching_species_in_conservancy,
-            name = "Proportion of Matching Species in Conservancy") %>% 
-  layout(title = "Proportion of Matching Species per Reserve",
-         xaxis = list(title = "Proportions (out of 1)", l = 50),
+            name = "Proportion of Matching Species in Conservancy (out of 1)") %>% 
+  layout(title = "Proportion/Percent of Matching Species per Reserve",
          yaxis = list(title = "Reserves", b = 20),
+         xaxis = list(title = ""),
+         
          barmode = "group",
-         margin = list(l = 220, b = 80),
+         autosize = FALSE,
+         margin = margins,
          legend = list(orientation = "h",
-                       x = 0, b = 150))
+                       x = 0, b = 150)) %>% 
+  add_annotations(x = speciesComparison$proportion_matching_species_in_reserve,
+                  y = speciesComparison$reserve,
+                  text = speciesComparison$percent_matching_species_in_reserve,
+                  xref = "x", yref = "y",
+                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
+                  ax = 20, ay = 4) %>% 
+  add_annotations(x = speciesComparison$proportion_matching_species_in_conservancy,
+                  y = speciesComparison$reserve,
+                  text = speciesComparison$percent_matching_species_in_conservancy,
+                  xref = "x", yref = "y",
+                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
+                  ax = 25, ay = -5)
              
-               
-  #              fill = factor(proportion_type))) +
-  # geom_bar(position = "dodge", stat = "identity") + 
-  # theme(legend.position = "bottom") +
-  # coord_flip()
+```
 
+
+```{r Plots of Conservancies with Closest Matches of Animal}
+
+# Order reserve by factors so as to use in plots
+
+animalsComparison <- allComparisonTable %>% 
+  filter(kingdom == "animals")
+
+animalsComparison$reserve <- 
+  factor(animalsComparison$reserve,
+         levels = unique(animalsComparison$reserve)[order(animalsComparison$proportion_matching_species_in_reserve,
+                                                          decreasing = TRUE)])
+
+# Set margins
+
+margins <- list(l = 250, r = 0, b = 0, t = 50, pad = 0.5)
+
+# Plot % species present in each reserve that are also in the conservancy
+
+animalsComparison %>% 
+  plot_ly(y = ~reserve, 
+          x = ~proportion_matching_species_in_reserve,
+          type = "bar", 
+          name = "Proportion of Matching Animal Species in Reserves (out of 1)",
+          orientation = "h",
+          width = 1100,
+          height = 800) %>% 
+  add_trace(x = ~proportion_matching_species_in_conservancy,
+            name = "Proportion of Matching Animal Species in Conservancy (out of 1)") %>% 
+  layout(title = "Proportion/Percent of Matching Animal Species per Reserve",
+         yaxis = list(title = "Reserves", r = 50),
+         xaxis = list(title = ""),
+         barmode = "group",
+         autosize = FALSE,
+         margin = margins,
+         legend = list(orientation = "h",
+                       x = 0, b = 150)) %>% 
+  add_annotations(x = animalsComparison$proportion_matching_species_in_reserve,
+                  y = animalsComparison$reserve,
+                  text = animalsComparison$percent_matching_species_in_reserve,
+                  xref = "x", yref = "y",
+                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
+                  ax = 15, ay = 4) %>% 
+  add_annotations(x = animalsComparison$proportion_matching_species_in_conservancy,
+                  y = animalsComparison$reserve,
+                  text = animalsComparison$percent_matching_species_in_conservancy,
+                  xref = "x", yref = "y",
+                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
+                  ax = 20, ay = -5)
+             
 ```
 
 
