@@ -654,8 +654,8 @@ speciesComparison %>%
           type = "bar", 
           name = "Proportion of Matching Species in Reserves (out of 1)",
           orientation = "h",
-          width = 1000,
-          height = 800) %>% 
+          width = 1100,
+          height = 900) %>% 
   add_trace(x = ~proportion_matching_species_in_conservancy,
             name = "Proportion of Matching Species in Conservancy (out of 1)") %>% 
   layout(title = "Proportion/Percent of Matching Species per Reserve",
@@ -666,19 +666,20 @@ speciesComparison %>%
          autosize = FALSE,
          margin = margins,
          legend = list(orientation = "h",
-                       x = 0, b = 150)) %>% 
-  add_annotations(x = speciesComparison$proportion_matching_species_in_reserve,
-                  y = speciesComparison$reserve,
-                  text = speciesComparison$percent_matching_species_in_reserve,
-                  xref = "x", yref = "y",
-                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
-                  ax = 20, ay = 4) %>% 
+                       x = 0, b = 0)) %>% 
   add_annotations(x = speciesComparison$proportion_matching_species_in_conservancy,
                   y = speciesComparison$reserve,
                   text = speciesComparison$percent_matching_species_in_conservancy,
                   xref = "x", yref = "y",
                   showarrow = TRUE, arrowhead = 4, arrowsize = .01,
-                  ax = 25, ay = -5)
+                  ax = 20, ay = -5) %>% 
+  add_annotations(x = speciesComparison$proportion_matching_species_in_reserve,
+                  y = speciesComparison$reserve,
+                  text = speciesComparison$percent_matching_species_in_reserve,
+                  xref = "x", yref = "y",
+                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
+                  ax = 20, ay = 4)
+  
              
 ```
 
@@ -708,7 +709,7 @@ animalsComparison %>%
           name = "Proportion of Matching Animal Species in Reserves (out of 1)",
           orientation = "h",
           width = 1100,
-          height = 800) %>% 
+          height = 900) %>% 
   add_trace(x = ~proportion_matching_species_in_conservancy,
             name = "Proportion of Matching Animal Species in Conservancy (out of 1)") %>% 
   layout(title = "Proportion/Percent of Matching Animal Species per Reserve",
@@ -718,13 +719,13 @@ animalsComparison %>%
          autosize = FALSE,
          margin = margins,
          legend = list(orientation = "h",
-                       x = 0, b = 150)) %>% 
+                       x = 0, b = 0)) %>% 
   add_annotations(x = animalsComparison$proportion_matching_species_in_reserve,
                   y = animalsComparison$reserve,
                   text = animalsComparison$percent_matching_species_in_reserve,
                   xref = "x", yref = "y",
                   showarrow = TRUE, arrowhead = 4, arrowsize = .01,
-                  ax = 15, ay = 4) %>% 
+                  ax = 20, ay = 4) %>% 
   add_annotations(x = animalsComparison$proportion_matching_species_in_conservancy,
                   y = animalsComparison$reserve,
                   text = animalsComparison$percent_matching_species_in_conservancy,
@@ -734,5 +735,114 @@ animalsComparison %>%
              
 ```
 
+```{r Plots of Reserves with Closest Matches of Animal}
 
+# Order reserve by factors so as to use in plots
 
+plantsComparison <- allComparisonTable %>% 
+  filter(kingdom == "plants")
+
+plantsComparison$reserve <- 
+  factor(plantsComparison$reserve,
+         levels = unique(plantsComparison$reserve)[order(plantsComparison$proportion_matching_species_in_reserve,
+                                                          decreasing = TRUE)])
+
+# Set margins
+
+margins <- list(l = 250, r = 0, b = 0, t = 50, pad = 0.5)
+
+# Plot % species present in each reserve that are also in the conservancy
+
+plantsComparison %>% 
+  plot_ly(y = ~reserve, 
+          x = ~proportion_matching_species_in_reserve,
+          type = "bar", 
+          name = "Proportion of Matching Plant Species in Reserves (out of 1)",
+          orientation = "h",
+          width = 1100,
+          height = 900) %>% 
+  add_trace(x = ~proportion_matching_species_in_conservancy,
+            name = "Proportion of Matching Plant Species in Conservancy (out of 1)") %>% 
+  layout(title = "Proportion/Percent of Matching Plant Species per Reserve",
+         yaxis = list(title = "Reserves", r = 50),
+         xaxis = list(title = ""),
+         barmode = "group",
+         autosize = FALSE,
+         margin = margins,
+         legend = list(orientation = "h",
+                       x = 0, b = 0)) %>% 
+  add_annotations(x = plantsComparison$proportion_matching_species_in_reserve,
+                  y = plantsComparison$reserve,
+                  text = plantsComparison$percent_matching_species_in_reserve,
+                  xref = "x", yref = "y",
+                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
+                  ax = 20, ay = 4) %>% 
+  add_annotations(x = plantsComparison$proportion_matching_species_in_conservancy,
+                  y = plantsComparison$reserve,
+                  text = plantsComparison$percent_matching_species_in_conservancy,
+                  xref = "x", yref = "y",
+                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
+                  ax = 20, ay = -5)
+             
+```
+
+```{r Plots of Number of Rare Species}
+
+# Prepare and otherwise Spread data for plotly use
+
+speciesCounts <- speciesComparisonAllReserveNumbers %>% 
+  select(category, number_of_reserves, number_of_species_found_in_n_or_fewer_reserves, 
+         percent_of_species_found_in_n_or_fewer_reserves) %>% 
+  filter(category == "species") %>% 
+  select(-category)
+
+speciesCountsDisaggregated <- speciesComparisonAllReserveNumbers %>% 
+  select(category, number_of_reserves, number_of_species_found_in_n_or_fewer_reserves) %>% 
+  filter(category %in% c("plants", "animals")) %>% 
+  spread(category, number_of_species_found_in_n_or_fewer_reserves, 
+         sep = "_number_of_species_found_in_n_or_fewer_reserves_") %>% 
+  left_join(speciesCounts, by = "number_of_reserves") 
+
+speciesCountsDisaggregated$category_number_of_species_found_in_n_or_fewer_reserves_plants[which(speciesCountsDisaggregated$number_of_reserves == 23)] <- 963
+speciesCountsDisaggregated$category_number_of_species_found_in_n_or_fewer_reserves_plants[which(is.na(speciesCountsDisaggregated$category_number_of_species_found_in_n_or_fewer_reserves_plants))] <- 964
+
+# Set margins
+
+margins <- list(l = 250, r = 0, b = 0, t = 50, pad = 0.5)
+
+# Plot % species present in each reserve that are also in the conservancy
+
+speciesCountsDisaggregated %>% 
+  plot_ly(x = ~number_of_reserves, 
+          y = ~category_number_of_species_found_in_n_or_fewer_reserves_plants,
+          type = "scatter", 
+          mode = "none",
+          fill = "tozeroy",
+          name = "Plant Species Found in X or Fewer Reserves",
+          width = 1100,
+          height = 900) %>% 
+  add_trace(y = ~category_number_of_species_found_in_n_or_fewer_reserves_animals,
+            name = "Animal Species Found in X or Fewer Reserves",
+            fill = "tonexty") %>% 
+  layout(title = "Number of Rare or Unique Species in Conservancy",
+         yaxis = list(title = "Number of Species Found", b = 20),
+         xaxis = list(title = "Number of Reserves (X)"),
+         autosize = FALSE,
+         margin = margins,
+         legend = list(orientation = "h",
+                       x = 0, b = 0)) %>% 
+  add_annotations(x = speciesCountsDisaggregated$number_of_reserves,
+                  y = speciesCountsDisaggregated$number_of_species_found_in_n_or_fewer_reserves,
+                  text = speciesCountsDisaggregated$percent_of_species_found_in_n_or_fewer_reserves,
+                  xref = "x", yref = "y",
+                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
+                  ax = 0, ay = 20) %>% 
+  add_annotations(x = speciesCountsDisaggregated$number_of_reserves,
+                  y = speciesCountsDisaggregated$number_of_species_found_in_n_or_fewer_reserves,
+                  text = speciesCountsDisaggregated$number_of_species_found_in_n_or_fewer_reserves,
+                  xref = "x", yref = "y",
+                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
+                  ax = 0, ay = 10)
+  
+             
+```
