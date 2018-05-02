@@ -814,19 +814,19 @@ margins <- list(l = 250, r = 0, b = 0, t = 50, pad = 0.5)
 
 speciesCountsDisaggregated %>% 
   plot_ly(x = ~number_of_reserves, 
-          y = ~category_number_of_species_found_in_n_or_fewer_reserves_plants,
+          y = ~number_of_species_found_in_n_or_fewer_reserves,
           type = "scatter", 
-          mode = "none",
+          mode = "lines",
           fill = "tozeroy",
           name = "Plant Species Found in X or Fewer Reserves",
-          width = 1100,
+          width = 1200,
           height = 900) %>% 
   add_trace(y = ~category_number_of_species_found_in_n_or_fewer_reserves_animals,
             name = "Animal Species Found in X or Fewer Reserves",
-            fill = "tonexty") %>% 
-  layout(title = "Number of Rare or Unique Species in Conservancy",
-         yaxis = list(title = "Number of Species Found", b = 20),
-         xaxis = list(title = "Number of Reserves (X)"),
+            fill = "tozeroy") %>% 
+  layout(title = "Number of Species in Conservancy Found in X or Fewer Reserves",
+         yaxis = list(title = "Number of Conservancy Species Found in X or Fewer Reserves", b = 20),
+         xaxis = list(title = "Number of Reserves (X)", dtick = 1),
          autosize = FALSE,
          margin = margins,
          legend = list(orientation = "h",
@@ -835,14 +835,14 @@ speciesCountsDisaggregated %>%
                   y = speciesCountsDisaggregated$number_of_species_found_in_n_or_fewer_reserves,
                   text = speciesCountsDisaggregated$percent_of_species_found_in_n_or_fewer_reserves,
                   xref = "x", yref = "y",
-                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
-                  ax = 0, ay = 20) %>% 
+                  showarrow = TRUE, arrowhead = 7, arrowsize = .001,
+                  ax = 15, ay = 20) %>% 
   add_annotations(x = speciesCountsDisaggregated$number_of_reserves,
                   y = speciesCountsDisaggregated$number_of_species_found_in_n_or_fewer_reserves,
                   text = speciesCountsDisaggregated$number_of_species_found_in_n_or_fewer_reserves,
                   xref = "x", yref = "y",
-                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
-                  ax = 0, ay = 10)
+                  showarrow = TRUE, arrowhead = 7, arrowsize = .001,
+                  ax = 5, ay = -20)
   
              
 ```
