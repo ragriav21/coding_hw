@@ -3,8 +3,8 @@ title: "Conservancy Analysis"
 author: "BEACN"
 date: "March 23, 2018"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ## Setup
@@ -683,6 +683,52 @@ speciesComparison %>%
              
 ```
 
+
+```{r Plots of Conservancies with Closest Matches of Species, Subset for top 10 in each category}
+
+speciesComparisonSubset <- speciesComparison %>% 
+  mutate(rank_reserve_match = 35 - row_number(proportion_matching_species_in_reserve)) %>% 
+  mutate(rank_conservancy_match = 35 - row_number(proportion_matching_species_in_conservancy)) %>% 
+  mutate_if(is.factor, as.character) %>% 
+  filter((rank_reserve_match < 11) | (rank_conservancy_match < 11))
+
+speciesComparisonSubset$reserve <- 
+  factor(speciesComparisonSubset$reserve,
+         levels = unique(speciesComparisonSubset$reserve)[order(speciesComparisonSubset$proportion_matching_species_in_reserve,
+                                                          decreasing = TRUE)])
+  
+speciesComparisonSubset %>% 
+  plot_ly(y = ~reserve, 
+          x = ~proportion_matching_species_in_reserve,
+          type = "bar", 
+          name = "Proportion of Species in Reserve Represented in Conservancy",
+          orientation = "h",
+          width = 800,
+          height = 500) %>% 
+  add_trace(x = ~proportion_matching_species_in_conservancy,
+            name = "Proportion of Species in Conservancy Represented in Reserve") %>% 
+  layout(title = "Proportion/Percent of Matching Species per Reserve, Top 10 Reserves per Category",
+         yaxis = list(title = "Reserves", b = 20),
+         xaxis = list(title = ""),
+         barmode = "group",
+         autosize = FALSE,
+         margin = list(l = 200, r = 0, b = 0, t = 40, pad = 0.5),
+         legend = list(orientation = "h",
+                       x = 0, b = 0)) %>% 
+  add_annotations(x = speciesComparisonSubset$proportion_matching_species_in_conservancy,
+                  y = speciesComparisonSubset$reserve,
+                  text = speciesComparisonSubset$percent_matching_species_in_conservancy,
+                  xref = "x", yref = "y",
+                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
+                  ax = 20, ay = -4.5) %>% 
+  add_annotations(x = speciesComparisonSubset$proportion_matching_species_in_reserve,
+                  y = speciesComparisonSubset$reserve,
+                  text = speciesComparisonSubset$percent_matching_species_in_reserve,
+                  xref = "x", yref = "y",
+                  showarrow = TRUE, arrowhead = 4, arrowsize = .01,
+                  ax = 20, ay = 3)
+
+```
 
 ```{r Plots of Conservancies with Closest Matches of Animal}
 
